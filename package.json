@@ -1,20 +1,29 @@
 {
-  "name": "front-memesplash",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "12.2.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
-  "devDependencies": {
-    "eslint": "8.20.0",
-    "eslint-config-next": "12.2.2"
-  }
+	"name": "front-memesplash",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"next": "12.2.2",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	},
+	"devDependencies": {
+		"eslint": "8.20.0",
+		"eslint-config-next": "12.2.2",
+		"eslint-config-prettier": "8.5.0",
+		"eslint-config-standard": "17.0.0",
+		"eslint-plugin-import": "2.26.0",
+		"eslint-plugin-n": "15.2.4",
+		"eslint-plugin-promise": "6.0.0",
+		"eslint-plugin-react": "7.30.1",
+		"eslint-plugin-react-hooks": "4.6.0",
+		"prettier": "2.7.1"
+	}
 }
