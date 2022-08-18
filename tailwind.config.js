@@ -13,10 +13,12 @@ module.exports = {
 			sans: ['Inter', 'Helvetica', 'Arial'] // Default font
 		},
 		borderRadius: {
-			sm: '0.5rem', // 8px
+			sm: '0.25rem', // 4px
+			DEFAULT: '0.5rem', // 8px
 			md: '1rem' // 16px
 		},
 		boxShadow: {
+			sm: '0px 0px 4px',
 			DEFAULT: '0px 0px 8px',
 			md: '0px 0px 12px'
 		},
