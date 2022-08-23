@@ -3,3 +3,5 @@
 @import 'tailwindcss/utilities';
 
 @import './fonts.css';
+@import './flexbox.css';
+@import './buttons.css';

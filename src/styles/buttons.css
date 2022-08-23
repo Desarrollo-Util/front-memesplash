@@ -1,0 +1,23 @@
+.btn {
+	@apply flex-c-c rounded-sm;
+}
+
+.btn-primary {
+	@apply text-white bg-blue-700;
+}
+
+.btn-secondary {
+	@apply text-white bg-purple-700;
+}
+
+.btn-small {
+	@apply h-10 text-xs px-4;
+}
+
+.btn-regular {
+	@apply h-12 px-6;
+}
+
+.btn-large {
+	@apply h-14 text-lg px-8;
+}
