@@ -6,7 +6,7 @@ const KINDS = {
 };
 
 const SIZES = {
-	small: 'btn-sm',
+	small: 'btn-small',
 	regular: 'btn-regular',
 	large: 'btn-large'
 };
