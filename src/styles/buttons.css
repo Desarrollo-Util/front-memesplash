@@ -3,7 +3,7 @@
 }
 
 .btn-primary {
-	@apply text-white bg-blue-700;
+	@apply text-white bg-indigo-500;
 }
 
 .btn-secondary {

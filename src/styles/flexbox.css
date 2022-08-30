@@ -1,3 +1,7 @@
 .flex-c-c {
-	@apply flex items-center justify-center;
+	@apply flex justify-center items-center;
+}
+
+.flexcol-s-st {
+	@apply flex flex-col justify-start items-stretch;
 }

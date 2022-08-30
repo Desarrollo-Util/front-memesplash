@@ -1,14 +1,14 @@
 import Button from '../components/atoms/button';
 
-const Home = () => {
+const HomePage = () => {
 	return (
 		<div>
 			<h1>Home</h1>
-			<Button kind='primary' size='regular'>
+			<Button kind='secondary' size='small'>
 				Registrate
 			</Button>
 		</div>
 	);
 };
 
-export default Home;
+export default HomePage;
