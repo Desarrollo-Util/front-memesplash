@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/auth-context';
+import { withAuth } from '../lib/hof/with-auth';
 
 const AuthPage = () => {
 	const { auth } = useContext(AuthContext);
@@ -10,22 +11,10 @@ const AuthPage = () => {
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = ({ req }) => {
-	const { cookies } = req;
-	const authToken = cookies[process.env.COOKIE_AUTH_KEY];
-
-	if (!authToken) {
-		return {
-			redirect: {
-				destination: '/login',
-				permanent: false
-			}
-		};
-	}
-
+export const getServerSideProps = withAuth((_, authToken) => {
 	return {
 		props: { authToken }
 	};
-};
+});
 
 export default AuthPage;

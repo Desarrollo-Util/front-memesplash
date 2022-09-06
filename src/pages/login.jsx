@@ -5,6 +5,7 @@ import Button from '../components/atoms/button';
 import InputPassword from '../components/atoms/inputs/input-password';
 import InputText from '../components/atoms/inputs/input-text';
 import { AuthContext } from '../contexts/auth-context';
+import { withNoAuth } from '../lib/hof/with-no-auth';
 
 const FORM_NAMES = {
 	EMAIL: 'email',
@@ -59,22 +60,8 @@ const onSubmit = async (data, setAuth) => {
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = ({ req }) => {
-	const { cookies } = req;
-	const authToken = cookies[process.env.COOKIE_AUTH_KEY];
-
-	if (authToken) {
-		return {
-			redirect: {
-				destination: '/',
-				permanent: false
-			}
-		};
-	}
-
-	return {
-		props: {}
-	};
-};
+export const getServerSideProps = withNoAuth(() => {
+	return { props: {} };
+});
 
 export default LoginPage;
