@@ -1,14 +1,13 @@
-import { serialize as serializeCookie } from 'cookie';
-import { decode } from 'jsonwebtoken';
+import { loginEndpoint, profileEndpoint } from '../../lib/api/auth.api';
+import { setAuthCookie } from '../../lib/utils/auth-cookie.utils';
 
 /** @type {import('next').NextApiHandler} */
 const loginController = async (req, res) => {
 	const { method, body } = req;
 
-	// Esto es una broma
-	// Emosido engañado
-	if (method !== 'POST')
-		return res.status(418).send({ errorMessage: 'Fuck you cheater' });
+	// #region Validaciones
+
+	if (method !== 'POST') return res.status(405).send();
 
 	const { email, password, ...rest } = body;
 
@@ -22,35 +21,36 @@ const loginController = async (req, res) => {
 			.status(400)
 			.send({ errorMessage: 'Existen campos sobrantes' });
 
-	const loginBackendResponse = await fetch(
-		`${process.env.NEXT_PUBLIC_BACKEND_URI}/login`,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email, password })
-		}
-	);
+	// #endregion
 
-	const backendPayload = await loginBackendResponse.json();
+	// Login
 
-	if (!loginBackendResponse.ok)
-		return res.status(loginBackendResponse.status).send(backendPayload);
+	const loginResponse = await loginEndpoint(email, password);
 
-	const jwtPayload = decode(backendPayload.token);
+	if (loginResponse.error) {
+		return res.status(loginResponse.status).send(loginResponse.error);
+	}
 
-	res.setHeader(
-		'Set-Cookie',
-		serializeCookie(process.env.COOKIE_AUTH_KEY, backendPayload.token, {
-			httpOnly: true,
-			sameSite: 'lax',
-			path: '/',
-			expires: new Date(jwtPayload.exp * 1000)
-		})
-	);
+	const token = loginResponse.data.token;
 
-	return res.send(backendPayload);
+	// Profile
+
+	const profileResponse = await profileEndpoint(token);
+
+	if (profileResponse.error) {
+		return res.status(profileResponse.status).send(profileResponse.error);
+	}
+
+	const profile = profileResponse.data;
+
+	// Set auth cookie
+
+	setAuthCookie(res, token);
+
+	return res.json({
+		token,
+		profile
+	});
 };
 
 export default loginController;

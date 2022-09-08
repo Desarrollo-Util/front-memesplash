@@ -7,5 +7,5 @@
 }
 
 .input-input {
-	@apply border border-indigo-500 rounded-sm p-2;
+	@apply border border-indigo-500 rounded-sm p-2 outline-indigo-500;
 }

@@ -1,14 +1,16 @@
-import { useState } from 'react';
 import { AuthContext } from '../contexts/auth-context';
+import { useAuth } from '../hooks/use-auth';
 import '../styles/index.css';
 
 const App = ({ Component, pageProps }) => {
-	const [auth, setAuth] = useState(pageProps?.authToken);
+	const { authState, ...componentProps } = pageProps;
+
+	const { auth, login, logout, updateProfile } = useAuth(authState);
 
 	return (
-		<AuthContext.Provider value={{ auth, setAuth }}>
+		<AuthContext.Provider value={{ auth, login, logout, updateProfile }}>
 			<header></header>
-			<Component {...pageProps} />
+			<Component {...componentProps} />
 			<footer></footer>
 		</AuthContext.Provider>
 	);

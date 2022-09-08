@@ -1,17 +1,16 @@
-export const withNoAuth = nextFn => {
-	return ({ req, ...args }) => {
-		const { cookies } = req;
-		const authToken = cookies[process.env.COOKIE_AUTH_KEY];
+const REDIRECT = {
+	redirect: {
+		destination: '/auth',
+		permanent: false
+	}
+};
 
-		if (authToken) {
-			return {
-				redirect: {
-					destination: '/',
-					permanent: false
-				}
-			};
-		}
+export const withNoAuth =
+	nextFn =>
+	({ req, ...args }) => {
+		const authToken = req.cookies[process.env.COOKIE_AUTH_KEY];
+
+		if (authToken) return REDIRECT;
 
 		return nextFn({ req, ...args }, authToken);
 	};
-};

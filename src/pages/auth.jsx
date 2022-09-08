@@ -1,19 +1,36 @@
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/auth-context';
+import { nextLogoutEndpoint } from '../lib/api/next-auth.api';
 import { withAuth } from '../lib/hof/with-auth';
 
 const AuthPage = () => {
-	const { auth } = useContext(AuthContext);
+	const { auth, logout } = useContext(AuthContext);
+	const { push } = useRouter();
 
-	if (!auth) return <p>Cargando...</p>;
+	return (
+		<div>
+			<p>Logueado como {auth.user.name}</p>
+			<button
+				onClick={async () => {
+					const response = await nextLogoutEndpoint();
 
-	return <h1>Página con Auth {auth}</h1>;
+					if (!response.error) {
+						logout();
+						push('/login');
+					}
+				}}
+			>
+				Logout
+			</button>
+		</div>
+	);
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withAuth((_, authToken) => {
+export const getServerSideProps = withAuth((_, authState) => {
 	return {
-		props: { authToken }
+		props: { authState }
 	};
 });
 

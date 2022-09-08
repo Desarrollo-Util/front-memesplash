@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../components/atoms/button';
 import InputPassword from '../components/atoms/inputs/input-password';
 import InputText from '../components/atoms/inputs/input-text';
 import { AuthContext } from '../contexts/auth-context';
+import { nextLoginEndpoint } from '../lib/api/next-auth.api';
 import { withNoAuth } from '../lib/hof/with-no-auth';
 
 const FORM_NAMES = {
@@ -13,20 +14,17 @@ const FORM_NAMES = {
 };
 
 const LoginPage = () => {
-	const { push } = useRouter();
-	const { auth, setAuth } = useContext(AuthContext);
+	const { login } = useContext(AuthContext);
+	const { push: routerPush } = useRouter();
 	const { handleSubmit, register } = useForm();
-
-	useEffect(() => {
-		if (!auth) return;
-		push('/auth');
-	}, [auth, push]);
 
 	return (
 		<div className='p-6 container max-w-lg mx-auto'>
 			<form
 				className='flexcol-s-st gap-4'
-				onSubmit={handleSubmit(data => onSubmit(data, setAuth))}
+				onSubmit={handleSubmit(formValues =>
+					onSubmit(formValues, login, routerPush)
+				)}
 			>
 				<InputText label='Email' {...register(FORM_NAMES.EMAIL)} />
 				<InputPassword
@@ -39,24 +37,18 @@ const LoginPage = () => {
 	);
 };
 
-const onSubmit = async (data, setAuth) => {
-	const { email, password } = data;
+const onSubmit = async (formValues, login, routerPush) => {
+	const { email, password } = formValues;
 
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTEND_URI}/api/login`,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email, password })
-		}
-	);
+	const response = await nextLoginEndpoint(email, password);
 
-	const responseData = await response.json();
+	if (response.error) return;
 
-	if (response.ok) setAuth(responseData.token);
-	else console.error(responseData.errorMessage);
+	const { token, profile } = response.data;
+
+	login(token, profile);
+
+	routerPush('/auth');
 };
 
 /** @type {import('next').GetServerSideProps} */

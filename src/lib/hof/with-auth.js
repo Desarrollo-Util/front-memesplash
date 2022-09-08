@@ -1,17 +1,32 @@
-export const withAuth = nextFn => {
-	return ({ req, ...args }) => {
-		const { cookies } = req;
-		const authToken = cookies[process.env.COOKIE_AUTH_KEY];
+import { profileEndpoint } from '../api/auth.api';
+import { removeAuthCookie } from '../utils/auth-cookie.utils';
 
-		if (!authToken) {
-			return {
-				redirect: {
-					destination: '/login',
-					permanent: false
-				}
-			};
+const REDIRECT = {
+	redirect: {
+		destination: '/login',
+		permanent: false
+	}
+};
+
+export const withAuth =
+	nextFn =>
+	async ({ req, res, ...args }) => {
+		const token = req.cookies[process.env.COOKIE_AUTH_KEY];
+
+		if (!token) return REDIRECT;
+
+		const profileResponse = await profileEndpoint(token);
+
+		if (profileResponse.error) {
+			removeAuthCookie(res);
+			return REDIRECT;
 		}
 
-		return nextFn({ req, ...args }, authToken);
+		return nextFn(
+			{ req, res, ...args },
+			{
+				user: profileResponse.data,
+				token
+			}
+		);
 	};
-};
