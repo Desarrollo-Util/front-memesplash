@@ -29,7 +29,6 @@ const AuthPage = () => {
 
 /** @type {import('next').GetServerSideProps} */
 export const getServerSideProps = withAuthGSSP((_, authState) => {
-	console.log('GSSP AUTH');
 	return {
 		props: { authState }
 	};

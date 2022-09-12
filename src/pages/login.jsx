@@ -53,7 +53,6 @@ const onSubmit = async (formValues, login, routerPush) => {
 
 /** @type {import('next').GetServerSideProps} */
 export const getServerSideProps = withNoAuthGSSP(() => {
-	console.log('GSSP LOGIN');
 	return { props: {} };
 });
 
