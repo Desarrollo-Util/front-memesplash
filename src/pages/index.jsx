@@ -12,7 +12,7 @@ const HomePage = () => {
 export const getServerSideProps = withStandardGSSP((_, authState) => {
 	return {
 		props: {
-			authState
+			authState: authState || null
 		}
 	};
 });
