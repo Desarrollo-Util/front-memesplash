@@ -1,14 +1,20 @@
-import Button from '../components/atoms/button';
+import { withStandardGSSP } from '../lib/hof/with-standard-gssp';
 
 const HomePage = () => {
 	return (
 		<div>
 			<h1>Home</h1>
-			<Button kind='secondary' size='small'>
-				Registrate
-			</Button>
 		</div>
 	);
 };
+
+/** @type {import('next').GetServerSideProps} */
+export const getServerSideProps = withStandardGSSP((_, authState) => {
+	return {
+		props: {
+			authState
+		}
+	};
+});
 
 export default HomePage;

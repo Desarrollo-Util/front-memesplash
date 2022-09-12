@@ -1,3 +1,5 @@
+import Head from 'next/head';
+import Header from '../components/navigation/header';
 import { AuthContext } from '../contexts/auth-context';
 import { useAuth } from '../hooks/use-auth';
 import '../styles/index.css';
@@ -9,7 +11,10 @@ const App = ({ Component, pageProps }) => {
 
 	return (
 		<AuthContext.Provider value={{ auth, login, logout, updateProfile }}>
-			<header></header>
+			<Head>
+				<title>MemeSplash</title>
+			</Head>
+			<Header />
 			<Component {...componentProps} />
 			<footer></footer>
 		</AuthContext.Provider>

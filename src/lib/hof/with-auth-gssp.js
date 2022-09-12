@@ -8,7 +8,7 @@ const REDIRECT = {
 	}
 };
 
-export const withAuth =
+export const withAuthGSSP =
 	nextFn =>
 	async ({ req, res, ...args }) => {
 		const token = req.cookies[process.env.COOKIE_AUTH_KEY];

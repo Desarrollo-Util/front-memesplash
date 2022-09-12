@@ -1,5 +1,17 @@
+.flex-s-c {
+	@apply flex justify-start items-center;
+}
+
 .flex-c-c {
 	@apply flex justify-center items-center;
+}
+
+.flex-sb-c {
+	@apply flex justify-between items-center;
+}
+
+.flexcol-c-e {
+	@apply flex flex-col justify-center items-end;
 }
 
 .flexcol-s-st {

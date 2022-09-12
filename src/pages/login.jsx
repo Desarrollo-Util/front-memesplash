@@ -6,7 +6,7 @@ import InputPassword from '../components/atoms/inputs/input-password';
 import InputText from '../components/atoms/inputs/input-text';
 import { AuthContext } from '../contexts/auth-context';
 import { nextLoginEndpoint } from '../lib/api/next-auth.api';
-import { withNoAuth } from '../lib/hof/with-no-auth';
+import { withNoAuthGSSP } from '../lib/hof/with-no-auth-gssp';
 
 const FORM_NAMES = {
 	EMAIL: 'email',
@@ -52,7 +52,8 @@ const onSubmit = async (formValues, login, routerPush) => {
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withNoAuth(() => {
+export const getServerSideProps = withNoAuthGSSP(() => {
+	console.log('GSSP LOGIN');
 	return { props: {} };
 });
 

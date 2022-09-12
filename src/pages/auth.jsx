@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/auth-context';
 import { nextLogoutEndpoint } from '../lib/api/next-auth.api';
-import { withAuth } from '../lib/hof/with-auth';
+import { withAuthGSSP } from '../lib/hof/with-auth-gssp';
 
 const AuthPage = () => {
 	const { auth, logout } = useContext(AuthContext);
@@ -28,7 +28,8 @@ const AuthPage = () => {
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withAuth((_, authState) => {
+export const getServerSideProps = withAuthGSSP((_, authState) => {
+	console.log('GSSP AUTH');
 	return {
 		props: { authState }
 	};
