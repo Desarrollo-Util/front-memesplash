@@ -1,6 +1,6 @@
 const endpoints = {
-	login: `${process.env.NEXT_PUBLIC_BACKEND_URI}/login`,
-	profile: `${process.env.NEXT_PUBLIC_BACKEND_URI}/profile`
+	login: `${process.env.NEXT_PUBLIC_BACKEND_URI}/users/login`,
+	profile: `${process.env.NEXT_PUBLIC_BACKEND_URI}/users/profile`
 };
 
 export const loginEndpoint = async (email, password) => {

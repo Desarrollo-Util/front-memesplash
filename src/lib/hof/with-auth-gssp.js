@@ -1,5 +1,8 @@
 import { profileEndpoint } from '../api/auth.api';
-import { removeAuthCookie } from '../utils/auth-cookie.utils';
+import {
+	getAuthTokenFromCookie,
+	removeAuthCookie
+} from '../utils/auth-cookie.utils';
 
 const REDIRECT = {
 	redirect: {
@@ -9,29 +12,28 @@ const REDIRECT = {
 };
 
 export const withAuthGSSP = nextFn => async context => {
-	const { req, res } = context;
+	const { req, res, resolvedUrl } = context;
 
-	const token = req.cookies[process.env.COOKIE_AUTH_KEY];
-
+	const token = getAuthTokenFromCookie(req);
 	if (!token) return REDIRECT;
 
-	const profileResponse = await profileEndpoint(token);
+	const isSSR = req.url === resolvedUrl;
 
-	if (profileResponse.error) {
-		removeAuthCookie(res);
-		return REDIRECT;
+	if (isSSR) {
+		const profileResponse = await profileEndpoint(token);
+
+		if (profileResponse.error) {
+			removeAuthCookie(res);
+			return REDIRECT;
+		}
+
+		const authState = {
+			user: profileResponse.data,
+			token
+		};
+
+		return nextFn ? nextFn(context, authState) : { props: { authState } };
 	}
 
-	const authState = {
-		user: profileResponse.data,
-		token
-	};
-
-	return nextFn
-		? nextFn(context, authState)
-		: {
-				props: {
-					authState
-				}
-		  };
+	return nextFn ? nextFn(context) : { props: {} };
 };

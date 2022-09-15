@@ -1,3 +1,5 @@
+import { getAuthTokenFromCookie } from '../utils/auth-cookie.utils';
+
 const REDIRECT = {
 	redirect: {
 		destination: '/auth',
@@ -8,7 +10,7 @@ const REDIRECT = {
 export const withNoAuthGSSP = nextFn => context => {
 	const { req } = context;
 
-	const authToken = req.cookies[process.env.COOKIE_AUTH_KEY];
+	const authToken = getAuthTokenFromCookie(req);
 
 	if (authToken) return REDIRECT;
 

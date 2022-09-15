@@ -1,10 +1,13 @@
 import { profileEndpoint } from '../api/auth.api';
-import { removeAuthCookie } from '../utils/auth-cookie.utils';
+import {
+	getAuthTokenFromCookie,
+	removeAuthCookie
+} from '../utils/auth-cookie.utils';
 
 export const withStandardGSSP = nextFn => async context => {
 	const { req, res } = context;
 
-	const token = req.cookies[process.env.COOKIE_AUTH_KEY];
+	const token = getAuthTokenFromCookie(req);
 
 	if (!token) return nextFn ? nextFn(context) : { props: {} };
 

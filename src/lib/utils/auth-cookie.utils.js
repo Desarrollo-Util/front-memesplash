@@ -1,6 +1,9 @@
 import { serialize as serializeCookie } from 'cookie';
 import { decode } from 'jsonwebtoken';
 
+export const getAuthTokenFromCookie = req =>
+	req.cookies[process.env.COOKIE_AUTH_KEY];
+
 export const setAuthCookie = (res, token) => {
 	const tokenPayload = decode(token);
 
