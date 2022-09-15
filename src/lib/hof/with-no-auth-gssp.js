@@ -5,12 +5,12 @@ const REDIRECT = {
 	}
 };
 
-export const withNoAuthGSSP =
-	nextFn =>
-	({ req, ...args }) => {
-		const authToken = req.cookies[process.env.COOKIE_AUTH_KEY];
+export const withNoAuthGSSP = nextFn => context => {
+	const { req } = context;
 
-		if (authToken) return REDIRECT;
+	const authToken = req.cookies[process.env.COOKIE_AUTH_KEY];
 
-		return nextFn({ req, ...args });
-	};
+	if (authToken) return REDIRECT;
+
+	return nextFn ? nextFn(context) : { props: {} };
+};

@@ -8,25 +8,30 @@ const REDIRECT = {
 	}
 };
 
-export const withAuthGSSP =
-	nextFn =>
-	async ({ req, res, ...args }) => {
-		const token = req.cookies[process.env.COOKIE_AUTH_KEY];
+export const withAuthGSSP = nextFn => async context => {
+	const { req, res } = context;
 
-		if (!token) return REDIRECT;
+	const token = req.cookies[process.env.COOKIE_AUTH_KEY];
 
-		const profileResponse = await profileEndpoint(token);
+	if (!token) return REDIRECT;
 
-		if (profileResponse.error) {
-			removeAuthCookie(res);
-			return REDIRECT;
-		}
+	const profileResponse = await profileEndpoint(token);
 
-		return nextFn(
-			{ req, res, ...args },
-			{
-				user: profileResponse.data,
-				token
-			}
-		);
+	if (profileResponse.error) {
+		removeAuthCookie(res);
+		return REDIRECT;
+	}
+
+	const authState = {
+		user: profileResponse.data,
+		token
 	};
+
+	return nextFn
+		? nextFn(context, authState)
+		: {
+				props: {
+					authState
+				}
+		  };
+};

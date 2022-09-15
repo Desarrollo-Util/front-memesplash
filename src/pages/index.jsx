@@ -9,12 +9,6 @@ const HomePage = () => {
 };
 
 /** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withStandardGSSP((_, authState) => {
-	return {
-		props: {
-			authState: authState || null
-		}
-	};
-});
+export const getServerSideProps = withStandardGSSP();
 
 export default HomePage;
