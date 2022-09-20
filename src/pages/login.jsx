@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../components/atoms/button';
 import InputPassword from '../components/atoms/inputs/input-password';
 import InputText from '../components/atoms/inputs/input-text';
-import { AuthContext } from '../contexts/auth-context';
-import { nextLoginEndpoint } from '../lib/api/next-auth.api';
-import { withNoAuthGSSP } from '../lib/hof/with-no-auth-gssp';
+import { useLogin } from '../hooks/api/users';
+import { noAuthGSSP } from '../lib/gssp/no-auth-gssp';
 
 const FORM_NAMES = {
 	EMAIL: 'email',
@@ -14,8 +12,8 @@ const FORM_NAMES = {
 };
 
 const LoginPage = () => {
-	const { login } = useContext(AuthContext);
 	const { push: routerPush } = useRouter();
+	const { mutateAsync: loginMutation } = useLogin();
 	const { handleSubmit, register } = useForm();
 
 	return (
@@ -23,7 +21,7 @@ const LoginPage = () => {
 			<form
 				className='flexcol-s-st gap-4'
 				onSubmit={handleSubmit(formValues =>
-					onSubmit(formValues, login, routerPush)
+					onSubmit(formValues, loginMutation, routerPush)
 				)}
 			>
 				<InputText label='Email' {...register(FORM_NAMES.EMAIL)} />
@@ -37,21 +35,17 @@ const LoginPage = () => {
 	);
 };
 
-const onSubmit = async (formValues, login, routerPush) => {
+const onSubmit = async (formValues, loginMutation, routerPush) => {
 	const { email, password } = formValues;
 
-	const response = await nextLoginEndpoint(email, password);
-
-	if (response.error) return;
-
-	const { token, profile } = response.data;
-
-	login(token, profile);
-
-	routerPush('/auth');
+	try {
+		await loginMutation({ email, password });
+		routerPush('/auth');
+	} catch (err) {
+		console.log(err);
+	}
 };
 
-/** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withNoAuthGSSP();
+export const getServerSideProps = noAuthGSSP;
 
 export default LoginPage;

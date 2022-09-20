@@ -1,30 +1,25 @@
+import axios from 'axios';
+
 const endpoints = {
 	login: `${process.env.NEXT_PUBLIC_FRONTEND_URI}/api/login`,
-	logout: `${process.env.NEXT_PUBLIC_FRONTEND_URI}/api/logout`
+	logout: `${process.env.NEXT_PUBLIC_FRONTEND_URI}/api/logout`,
+	refresh: `${process.env.NEXT_PUBLIC_FRONTEND_URI}/api/refresh`
 };
 
 export const nextLoginEndpoint = async (email, password) => {
-	const response = await fetch(endpoints.login, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({ email, password })
-	});
+	const { data } = await axios.post(endpoints.login, { email, password });
 
-	if (!response.ok) return { error: true };
-
-	const data = await response.json();
-
-	return { data };
+	return data;
 };
 
 export const nextLogoutEndpoint = async () => {
-	const response = await fetch(endpoints.logout, {
-		method: 'POST'
-	});
+	const { data } = await axios.post(endpoints.logout);
 
-	if (!response.ok) return { error: true };
+	return data;
+};
 
-	return { data: true };
+export const nextRefreshEndpoint = async () => {
+	const { data } = await axios.post(endpoints.refresh);
+
+	return data;
 };

@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-export const useAuth = initialState => {
-	const [auth, setAuth] = useState(initialState);
+export const useAuth = authToken => {
+	const authTokenRef = useRef(authToken);
+	const [, setDummy] = useState(true);
 
-	const login = (token, user) =>
-		setAuth({
-			token,
-			user
-		});
+	const updateAuthToken = newToken => {
+		if (newToken === authTokenRef.current) return;
 
-	const logout = () => setAuth();
+		authTokenRef.current = newToken;
+		setDummy(prev => !prev);
+	};
 
-	const updateProfile = user => setAuth({ token: auth.token, user });
+	if (authToken !== undefined && authToken !== authTokenRef.current)
+		authTokenRef.current = authToken;
 
-	return { auth, login, logout, updateProfile };
+	return { authTokenRef, updateAuthToken };
 };

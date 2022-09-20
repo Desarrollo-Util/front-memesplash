@@ -7,47 +7,30 @@ import {
 import { isSSR } from '../utils/is-ssr.utils';
 
 /**
- * High order function for pages where AUTHENTICATION IS OPTIONAL
+ * GSSP function for pages where AUTHENTICATION IS OPTIONAL
  *  - !authToken && !isSSR-> Props
- *  - !authToken && isSSR -> Props and nextFn
+ *  - !authToken && isSSR -> Props
  *  - authToken && !isSSR  -> Props
- *  - authToken && isSSR -> Get profile, nextFn and props
+ *  - authToken && isSSR -> Get profile and props
  *    - Error on get profile (so rare) -> Remove cookie and props
  *
- * @param {Function} nextFn Next function to execute
  */
-export const withStandardGSSP = nextFn => async context => {
+export const standardGSSP = async context => {
 	const { req, res } = context;
 
 	const authToken = getAuthTokenFromCookie(req);
 
-	if (!isSSR(context)) return { props: { authToken } };
-
-	const queryClient = new QueryClient();
-
-	if (!authToken) {
-		await nextFn(context, queryClient);
-
-		return {
-			props: {
-				authToken: null,
-				dehydratedState: dehydrate(queryClient)
-			}
-		};
-	}
+	if (!authToken || !isSSR(context)) return { props: { authToken } };
 
 	try {
+		const queryClient = new QueryClient();
+
 		await queryClient.fetchQuery(['profile', authToken], () =>
 			profileEndpoint(authToken)
 		);
 
-		await nextFn(context, queryClient, authToken);
-
 		return {
-			props: {
-				authToken,
-				dehydratedState: dehydrate(queryClient)
-			}
+			props: { authToken, dehydratedState: dehydrate(queryClient) }
 		};
 	} catch (error) {
 		removeAuthCookie(res);

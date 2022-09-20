@@ -1,4 +1,4 @@
-import { withStandardGSSP } from '../lib/hof/with-standard-gssp';
+import { standardGSSP } from '../lib/gssp/standard-gssp';
 
 const HomePage = () => {
 	return (
@@ -8,7 +8,6 @@ const HomePage = () => {
 	);
 };
 
-/** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withStandardGSSP();
+export const getServerSideProps = standardGSSP;
 
 export default HomePage;

@@ -1,33 +1,18 @@
-import { useRouter } from 'next/router';
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/auth-context';
-import { nextLogoutEndpoint } from '../lib/api/next-auth.api';
-import { withAuthGSSP } from '../lib/hof/with-auth-gssp';
+import { useLogout, useProfile } from '../hooks/api/users';
+import { authGSSP } from '../lib/gssp/auth-gssp';
 
 const AuthPage = () => {
-	const { auth, logout } = useContext(AuthContext);
-	const { push } = useRouter();
+	const { data } = useProfile();
+	const { mutateAsync: logout } = useLogout();
 
 	return (
 		<div>
-			<p>Logueado como {auth.user.name}</p>
-			<button
-				onClick={async () => {
-					const response = await nextLogoutEndpoint();
-
-					if (!response.error) {
-						logout();
-						push('/login');
-					}
-				}}
-			>
-				Logout
-			</button>
+			<p>Logueado como {data?.name}</p>
+			<button onClick={logout}>Logout</button>
 		</div>
 	);
 };
 
-/** @type {import('next').GetServerSideProps} */
-export const getServerSideProps = withAuthGSSP();
+export const getServerSideProps = authGSSP;
 
 export default AuthPage;

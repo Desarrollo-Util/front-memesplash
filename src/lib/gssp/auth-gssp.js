@@ -14,15 +14,13 @@ const REDIRECT = {
 };
 
 /**
- * High order function for pages where REDIRECTS if the user ISN'T AUTHENTICATED
+ * GSSP function for pages where REDIRECTS if the user ISN'T AUTHENTICATED
  *  - !authToken -> Redirect
- *  - !isSSR && authToken -> Props
+ *  - authToken && !isSSR  -> Props (auth token)
  *  - authToken && isSSR -> Get profile and props
  *    - Error on get profile (so rare) -> Remove cookie and redirect
- *
- * @param {Function} nextFn Next function to execute
  */
-export const withAuthGSSP = nextFn => async context => {
+export const authGSSP = async context => {
 	const { req, res } = context;
 
 	const authToken = getAuthTokenFromCookie(req);
@@ -36,8 +34,6 @@ export const withAuthGSSP = nextFn => async context => {
 		await queryClient.fetchQuery(['profile', authToken], () =>
 			profileEndpoint(authToken)
 		);
-
-		await nextFn(context, queryClient, authToken);
 
 		return {
 			props: {
