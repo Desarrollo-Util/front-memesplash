@@ -13,9 +13,11 @@ const SIZES = {
 };
 
 const LinkButton = ({ href, kind = 'primary', size = 'regular', ...props }) => (
-	<Link href={href}>
-		<a className={clsx('btn', SIZES[size], KINDS[kind])} {...props} />
-	</Link>
+	<Link
+		href={href}
+		className={clsx('btn', SIZES[size], KINDS[kind])}
+		{...props}
+	/>
 );
 
 export default LinkButton;

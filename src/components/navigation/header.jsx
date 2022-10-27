@@ -8,13 +8,11 @@ const Header = () => {
 
 	return (
 		<header className='flex-sb-c h-16 px-4'>
-			<Link href='/'>
-				<a className='flex-s-c gap-2'>
-					<span className='flex-c-c h-10 w-10 bg-indigo-500 text-white font-bold rounded'>
-						MS
-					</span>
-					<span className='text-lg font-bold'>MemeSplash</span>
-				</a>
+			<Link href='/' className='flex-s-c gap-2'>
+				<span className='flex-c-c h-10 w-10 bg-indigo-500 text-white font-bold rounded'>
+					MS
+				</span>
+				<span className='text-lg font-bold'>MemeSplash</span>
 			</Link>
 			<Link href='/auth'>Auth</Link>
 			<Link href='/login'>Login</Link>
